@@ -125,3 +125,15 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Ecommerce',  # Replace with your database name
+        'USER': 'postgres',  # Replace with your PostgreSQL username
+        'PASSWORD': 'admin',  # Replace with your PostgreSQL password
+        'HOST': 'localhost',  # Use 'localhost' for local or the IP address for remote
+        'PORT': '5432',  # Default PostgreSQL port
+    }
+}
+

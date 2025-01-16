@@ -3,6 +3,6 @@ from .models import Product
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'stock', 'date_added')  # Columns to display
+    list_display = ('name', 'price', 'stock_quantity', 'created_at')  # Columns to display
     search_fields = ('name', 'category')  # Searchable fields
-    list_filter = ('category', 'date_added')  # Filters in the sidebar
+    list_filter = ('category', 'created_at')  # Filters in the sidebar
