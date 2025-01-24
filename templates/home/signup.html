@@ -1,6 +1,14 @@
-<form method="POST">
+<form method="post">
     {% csrf_token %}
-    <input type="text" name="username" placeholder="Username" required>
-    <input type="password" name="password" placeholder="Password" required>
+    <label>Username:</label>
+    <input type="text" name="username" required>
+    <label>Password:</label>
+    <input type="password" name="password" required>
+    <label>Email:</label>
+    <input type="email" name="email" required>
+    <label>First Name:</label>
+    <input type="text" name="first_name" required>
+    <label>Last Name:</label>
+    <input type="text" name="last_name" required>
     <button type="submit">Sign Up</button>
 </form>
