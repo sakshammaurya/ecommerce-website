@@ -1,0 +1,72 @@
+
+{% block content %}
+<div class="container">
+  <h2 class="mt-4">Complete Payment for Order #{{ order.id }}</h2>
+  
+  <div class="card mt-4">
+    <div class="card-header">
+      <h4>Payment Summary</h4>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for item in cart_items %}
+      <li class="list-group-item">
+        {{ item.quantity }} × {{ item.product.name }} - ${{ item.price }}
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="card-footer">
+      <h5>Total Amount: ${{ total }}</h5>
+    </div>
+  </div>
+
+  <form method="post" action="{% url 'order_confirmation' order_id=order.id %}" class="mt-4">
+    {% csrf_token %}
+    <div class="card">
+      <div class="card-header">
+        <h4>Test Payment Details</h4>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Card Number</label>
+          <input type="text" class="form-control" 
+                 value="4242 4242 4242 4242" readonly>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Expiry Date</label>
+              <input type="text" class="form-control" 
+                     value="12/2025" readonly>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>CVC</label>
+              <input type="text" class="form-control" 
+                     value="123" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-success btn-lg">
+        Confirm Payment
+      </button>
+      <a href="{% url 'checkout' %}" class="btn btn-secondary">
+        Back to Checkout
+      </a>
+    </div>
+  </form>
+</div>
+{% if messages %}
+<div class="alert-container">
+  {% for message in messages %}
+  <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,62 @@
+
+{% block content %}
+<div class="container">
+  <div class="confirmation-card">
+    <h2 class="text-success">✅ Order Confirmed!</h2>
+    <div class="order-meta">
+      <p>Order ID: <strong>#{{ order.id }}</strong></p>
+      <p>Date: {{ order.created_at|date:"F j, Y H:i" }}</p>
+    </div>
+
+    <div class="customer-info">
+      <h4>Customer Details</h4>
+      <div class="info-box">
+        <p><strong>Email:</strong> {{ order.email }}</p>
+        <p><strong>Shipping Address:</strong></p>
+        <div class="address-box">
+          {{ order.shipping_address|linebreaks }}
+        </div>
+      </div>
+    </div>
+
+    <div class="order-items">
+      <h4>Order Summary</h4>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order.items.all %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.price }}</td>
+            <td>${{ item.total_price }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td colspan="3"><strong>Grand Total:</strong></td>
+            <td><strong>${{ order.total }}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="actions mt-4">
+      <a href="{% url 'product_list' %}" class="btn btn-primary">
+        Continue Shopping
+      </a>
+      <a href="{% url 'order_history' %}" class="btn btn-outline-secondary">
+        View Order History
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

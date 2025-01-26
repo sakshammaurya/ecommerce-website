@@ -31,7 +31,10 @@ SECRET_KEY = 'django-insecure-jujdj!!kr20s)q!c%d=vrwx%h%-z)#d-p-w@!&!t7^xv67eu*+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+# Disable redirect interception for debugging
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False
+}
 ALLOWED_HOSTS = []
 
 

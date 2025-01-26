@@ -27,3 +27,31 @@ footer {
     width: 100%;
     bottom: 0;
 }
+
+/* Prevent redirect interception layout breaks */
+div.ddjdt { display: none !important; }
+
+.confirmation-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 800px;
+}
+
+.order-items table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.order-items th, .order-items td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.total-row {
+  background-color: #f9f9f9;
+}

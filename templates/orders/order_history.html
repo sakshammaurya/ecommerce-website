@@ -1,0 +1,22 @@
+
+{% block content %}
+  <div class="container">
+    <h2>Your Order History</h2>
+    {% for order in orders %}
+      <div class="card mb-3">
+        <div class="card-header">
+          Order #{{ order.id }} - {{ order.created_at|date:"F j, Y H:i" }}
+        </div>
+        <div class="card-body">
+          <p>Status: {{ order.get_status_display }}</p>
+          <p>Total: ${{ order.total }}</p>
+          <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-info">
+            View Details
+          </a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="alert alert-info">No orders found.</div>
+    {% endfor %}
+  </div>
+{% endblock %}
