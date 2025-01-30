@@ -1,19 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Product List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing</title>
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'products/product_style.css' %}">
+    <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>Product List</h1>
-    <ul>
-        {% for product in products %}
-            <li>
-                <a href="{% url 'product_detail' product.pk %}">
-                    <h3>{{ product.name }}</h3>
-                </a>
-                <p>Price: ${{ product.price }}</p>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <div class="header">
+            <h1 class="page-title">Our Products</h1>
+            <input type="text" class="search-bar" placeholder="Search products...">
+        </div>
+
+        <div class="filter-section">
+            <button class="btn btn-primary">All Products</button>
+            <button class="btn btn-secondary">On Sale</button>
+        </div>
+
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                {% if product.on_sale %}
+                <div class="sale-badge">Sale!</div>
+                {% endif %}
+                
+                <i class="{% if product.is_favorite %}fas{% else %}far{% endif %} fa-heart favorite-icon"></i>
+                
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                    <div class="no-image-placeholder">No image available</div>
+                {% endif %}
+                
+                <div class="product-content">
+                    <span class="product-category">{{ product.category }}</span>
+                    <h3 class="product-title">{{ product.name }}</h3>
+                    <p class="product-description">{{ product.description }}</p>
+                    <div class="product-price">
+                        {% if product.on_sale %}
+                            <span class="original-price">${{ product.original_price }}</span>
+                            ${{ product.price }}
+                        {% else %}
+                            ${{ product.price }}
+                        {% endif %}
+                    </div>
+                    <span class="stock-status {% if product.in_stock %}in-stock{% else %}out-of-stock{% endif %}">
+                        {{ product.get_stock_status_display }}
+                    </span>
+                    <div class="product-actions">
+                        <button class="btn btn-primary">Add to Cart</button>
+                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>

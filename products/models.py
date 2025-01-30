@@ -9,9 +9,19 @@ class Product(models.Model):
     category = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    STOCK_STATUS = (
+        (0, 'Out of Stock'),
+        (1, 'Low Stock'),
+        (2, 'In Stock'),
+    )
+    
+    stock_status = models.IntegerField(choices=STOCK_STATUS, default=2)
+    
     def __str__(self):
         return self.name
+    
+    def get_stock_status_display(self):
+        return dict(self.STOCK_STATUS)[self.stock_status]
 
 
 
