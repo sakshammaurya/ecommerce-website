@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <form method="post" action="{% url 'order_confirmation' order_id=order.id %}" class="mt-4">
+  <form method="post" action="{% url 'cart:process_payment' order_id=order.id %}" class="mt-4">
     {% csrf_token %}
     <div class="card">
       <div class="card-header">
@@ -54,7 +54,7 @@
       <button type="submit" class="btn btn-success btn-lg">
         Confirm Payment
       </button>
-      <a href="{% url 'checkout' %}" class="btn btn-secondary">
+      <a href="{% url 'cart:checkout' %}" class="btn btn-secondary">
         Back to Checkout
       </a>
     </div>

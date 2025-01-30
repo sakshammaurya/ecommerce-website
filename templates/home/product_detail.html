@@ -14,12 +14,14 @@
 
     <p><strong>Price:</strong> ${{ product.price }}</p>
     <p>{{ product.description }}</p>
-    <form method="post" action="{% url 'add_to_cart' product.id %}">
+    <form method="post" action="{%url 'cart:add_to_cart' product.id %}">
         {% csrf_token %}
         <input type="number" name="quantity" min="1" value="1">
-        <button type="submit" class="btn btn-primary">Add to Cart</button>
+        <button class="add-to-cart" data-product-id="{{ cart.product_id }}">
+          Add to Cart
+      </button>
     <div class="mt-3">
-    <a href="{% url 'checkout' %}" class="btn btn-success">
+    <a href="{% url 'cart:checkout' %}" class="btn btn-success">
       Proceed to Checkout
     </a>
     </div>

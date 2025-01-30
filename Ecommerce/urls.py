@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('products.urls')),# Include the product app's URLs
     path('home/', include('accounts.urls')),# Include the login app's URLs
     path('__debug__/', include('debug_toolbar.urls')),
+    path('', include('cart.urls')),
 ]
 
 if settings.DEBUG:

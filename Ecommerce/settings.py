@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'home',
     'accounts',
     'products',
+    'cart.apps.CartConfig',
     'debug_toolbar',
     'django_extensions',
 ]
@@ -63,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    
 ]
 
 
@@ -86,6 +88,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.context_processors.cart_quantity',
             ],
         },
     },

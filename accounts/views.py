@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+
+from cart.models import Cart
 from .forms import SignupForm, LoginForm
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -38,7 +40,24 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')  # Redirect to your homepage
+            if request.user.is_authenticated:
+        # Merge session cart with user cart
+                try:
+                    session_cart = Cart.objects.get(session_key=request.session.session_key)
+                    user_cart, created = Cart.objects.get_or_create(user=request.user)
+                    
+                    for item in session_cart.items.all():
+                        user_item, created = user_cart.items.get_or_create(
+                            product=item.product,
+                            defaults={'quantity': item.quantity, 'price': item.price}
+                        )
+                        if not created:
+                            user_item.quantity += item.quantity
+                            user_item.save()
+                    session_cart.delete()
+                except Cart.DoesNotExist:
+                    pass
+            return redirect('home') # Redirect to your homepage
     else:
         form = LoginForm()
     return render(request, 'home/login.html', {'form': form})
@@ -47,3 +66,4 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
