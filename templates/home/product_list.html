@@ -3,63 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Listing</title>
-    
+    <title>Product Catalog | Your Store Name</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'products/product_style.css' %}">
-    <!-- Include Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1 class="page-title">Our Products</h1>
-            <input type="text" class="search-bar" placeholder="Search products...">
-        </div>
+    <div class="container py-5">
+        <!-- Header Section -->
+        <header class="mb-5">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                <h1 class="display-5 fw-bold mb-3 mb-md-0">Our Product Collection</h1>
+                <form class="d-flex w-100 w-md-50" method="GET" action="{% url 'product_list' %}">
+                    <div class="input-group">
+                        <input type="text" 
+                               name="q" 
+                               class="form-control form-control-lg" 
+                               placeholder="Search products..." 
+                               value="{{ request.GET.q }}"
+                               aria-label="Search products">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-        <div class="filter-section">
-            <button class="btn btn-primary">All Products</button>
-            <button class="btn btn-secondary">On Sale</button>
-        </div>
+            <!-- Filters -->
+            <div class="d-flex gap-2 mb-4">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary active">All Products</button>
+                    <button class="btn btn-outline-primary">On Sale</button>
+                </div>
+            </div>
 
-        <div class="product-grid">
+            <!-- Search Results Info -->
+            {% if request.GET.q %}
+            <div class="alert alert-info" role="alert">
+                Showing {{ products.count }} results for "<strong>{{ request.GET.q }}</strong>"
+            </div>
+            {% endif %}
+        </header>
+
+        <!-- Product Grid -->
+        <div class="row g-4">
             {% for product in products %}
-            <div class="product-card">
-                {% if product.on_sale %}
-                <div class="sale-badge">Sale!</div>
-                {% endif %}
-                
-                <i class="{% if product.is_favorite %}fas{% else %}far{% endif %} fa-heart favorite-icon"></i>
-                
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
-                {% else %}
-                    <div class="no-image-placeholder">No image available</div>
-                {% endif %}
-                
-                <div class="product-content">
-                    <span class="product-category">{{ product.category }}</span>
-                    <h3 class="product-title">{{ product.name }}</h3>
-                    <p class="product-description">{{ product.description }}</p>
-                    <div class="product-price">
-                        {% if product.on_sale %}
-                            <span class="original-price">${{ product.original_price }}</span>
-                            ${{ product.price }}
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <div class="card h-100 shadow-sm position-relative">
+                    <!-- Sale Badge -->
+                    {% if product.on_sale %}
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">Sale</span>
+                    {% endif %}
+
+                    <!-- Favorite Icon -->
+                    <button class="btn btn-link position-absolute top-0 end-0 m-2 p-0">
+                        <i class="{% if product.is_favorite %}fas{% else %}far{% endif %} fa-heart text-danger fs-5"></i>
+                    </button>
+
+                    <!-- Product Image -->
+                    <div class="card-img-top position-relative bg-light" style="height: 200px; overflow: hidden;">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" 
+                             alt="{{ product.name }}" 
+                             class="img-fluid h-100 w-100 object-fit-cover">
                         {% else %}
-                            ${{ product.price }}
+                        <div class="d-flex h-100 w-100 align-items-center justify-content-center text-muted">
+                            <i class="fas fa-image fa-3x"></i>
+                        </div>
                         {% endif %}
                     </div>
-                    <span class="stock-status {% if product.in_stock %}in-stock{% else %}out-of-stock{% endif %}">
-                        {{ product.get_stock_status_display }}
-                    </span>
-                    <div class="product-actions">
-                        <button class="btn btn-primary">Add to Cart</button>
-                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary">View Details</a>
+
+                    <div class="card-body">
+                        <!-- Category -->
+                        <small class="text-muted text-uppercase">{{ product.category }}</small>
+                        
+                        <!-- Product Name -->
+                        <h3 class="h5 card-title my-2">{{ product.name }}</h3>
+                        
+                        <!-- Description -->
+                        <p class="card-text text-muted small mb-3 line-clamp-2">
+                            {{ product.description|truncatechars:100 }}
+                        </p>
+
+                        <!-- Pricing -->
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            {% if product.on_sale %}
+                            <span class="text-danger fs-5 fw-bold">${{ product.price }}</span>
+                            <small class="text-muted text-decoration-line-through">${{ product.original_price }}</small>
+                            {% else %}
+                            <span class="fs-5 fw-bold">${{ product.price }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Stock Status -->
+                        <div class="d-flex justify-content-between align-items-center small">
+                            <span class="badge {% if product.in_stock %}bg-success{% else %}bg-secondary{% endif %}">
+                                {{ product.get_stock_status_display }}
+                            </span>
+                            <a href="{% url 'product_detail' product.pk %}" 
+                               class="text-decoration-none">
+                                View Details <i class="fas fa-chevron-right ms-1"></i>
+                            </a>
+                        </div>
                     </div>
+
+                    <!-- Add to Cart -->
+                    <div class="card-footer bg-transparent">
+                        <button class="btn btn-primary w-100">
+                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5 bg-light rounded-3">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h2 class="h4">No products found</h2>
+                    <p class="text-muted">Try adjusting your search or filters</p>
                 </div>
             </div>
             {% endfor %}
         </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav class="mt-5" aria-label="Product pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" 
+                       href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}">
+                       Previous
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}&q={{ request.GET.q }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" 
+                       href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}">
+                       Next
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

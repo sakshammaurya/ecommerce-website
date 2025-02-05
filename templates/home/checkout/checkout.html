@@ -15,7 +15,7 @@
     <h5>Total: ${{ total }}</h5>
   </div>
 
-  <form method="post" action="{% url 'cart:process_payment' %}">
+  <form method="post" action="{% url 'cart:checkout' %}">
     {% csrf_token %}
     <div class="form-group">
       <label>Email:</label>
