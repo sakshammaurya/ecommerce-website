@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 
 #product list handler
 def product_list(request):
+    
     # Fetch all categories
     categories = Category.objects.only('id', 'name')
 

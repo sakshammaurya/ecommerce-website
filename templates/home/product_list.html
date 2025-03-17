@@ -20,10 +20,10 @@
                 <form class="d-flex w-100 w-md-50" method="GET" action="{% url 'product_list' %}">
                     <div class="input-group">
                         <input type="text" 
-                               name="q" 
+                               name="product_filter" 
                                class="form-control form-control-lg" 
                                placeholder="Search products..." 
-                               value="{{ request.GET.q }}"
+                               value="{{ request.GET.product_filter }}"
                                aria-label="Search products">
                         <button type="submit" class="btn btn-primary btn-lg">
                             <i class="fas fa-search"></i>
@@ -65,15 +65,16 @@
             </div>
 
             <!-- Search Results Info -->
-            {% if request.GET.q %}
+            {% if request.GET.product_filter %}
             <div class="alert alert-info" role="alert">
-                Showing {{ page_obj.paginator.count }} results for "<strong>{{ request.GET.q }}</strong>"
+                Showing {{ page_obj.paginator.count }} results for "<strong>{{ request.GET.product_filter }}</strong>"
             </div>
             {% endif %}
         </header>
 
         <!-- Product Grid -->
-        <div class="row g-4">
+        
+        <div class="row g-4" >
             {% for product in page_obj %}
             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                 <div class="card h-100 shadow-sm position-relative">
@@ -140,7 +141,7 @@
                 </div>
             </div>
             {% endfor %}
-        </div>
+        </div></a>
 
         <!-- Pagination -->
         {% if page_obj.has_other_pages %}
