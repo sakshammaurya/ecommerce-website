@@ -1,2 +1,29 @@
 node_modules
 node_modules
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Django generated files
+db.sqlite3
+media/
+staticfiles/
+
+# Node dependencies and build output
+node_modules/
+npm-debug.log*
+dist/
+build/
