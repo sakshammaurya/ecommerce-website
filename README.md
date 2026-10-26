@@ -1,130 +1,54 @@
-# Ecommerce Project
+# Django E-commerce Demo
 
-This is a Django-based Ecommerce application that allows users to browse products, filter by categories, sort by various criteria, search for products, and view product details.
+A Django-based e-commerce application with product browsing, search, category filtering, sorting, pagination, product detail pages, and cart-related functionality.
 
----
+## Stack
 
-## Project Features
+- Python / Django
+- PostgreSQL
+- Redis (configured in Docker Compose)
+- Docker Compose for local services
 
-1. **Product Listing**:
+## Run locally with Docker Compose
 
-   - Displays a grid of products with images, names, prices, and stock status.
-   - Includes pagination for easy navigation.
+1. Install Docker Desktop / Docker Compose.
+2. Copy the example environment file and replace the placeholders with local-only values:
 
-2. **Category Filtering**:
-
-   - Users can filter products by categories using a dropdown menu.
-
-3. **Sorting**:
-
-   - Products can be sorted by:
-     - Newest
-     - Price: Low to High
-     - Price: High to Low
-     - Name
-
-4. **Search Functionality**:
-
-   - Users can search for products by name or description.
-
-5. **Product Details**:
-
-   - Each product has a detailed view with additional information.
-
-6. **Stock Status**:
-
-   - Displays whether a product is in stock or out of stock.
-
-7. **Add to Cart Button**:
-
-   - Disabled for out-of-stock products.
-
-8. **Pagination**:
-   - Allows users to navigate through multiple pages of products.
-
----
-
-## Project Flow
-
-1. **Homepage**:
-
-   - Displays the product catalog with filtering, sorting, and search options.
-
-2. **Category Filtering**:
-
-   - Users can select a category from the dropdown to filter products.
-
-3. **Sorting**:
-
-   - Users can sort products using the "Sort by" dropdown.
-
-4. **Search**:
-
-   - Users can search for products using the search bar.
-
-5. **Product Details**:
-
-   - Clicking on "View Details" redirects to the product detail page.
-
-6. **Pagination**:
-   - Users can navigate between pages using the pagination controls.
-
----
-
-## How to Run the Project
-
-### Prerequisites
-
-- Python 3.8 or higher
-- Django 4.0 or higher
-- A virtual environment (recommended)
-
-### Setup Instructions
-
-1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/ecommerce.git
-   cd ecommerce
+   # Windows PowerShell
+   Copy-Item .env.example .env
+   # macOS/Linux
+   cp .env.example .env
    ```
-2. **Create a Virtual Environment**:
 
-   ````python -m venv venv
-   source venv/bin/activate # On Windows: venv\Scripts\activate```
-   ````
+3. Generate a fresh Django secret key. One option is:
 
-3. **Install Dependencies**:
-   `pip install -r requirements.txt`
+   ```bash
+   python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+   ```
 
-4.**Apply Migrations**:
-`python manage.py makemigrations
-python manage.py migrate`
+   Put the generated value into `.env` as `DJANGO_SECRET_KEY`. Set `DB_PASSWORD` to a local PostgreSQL password. Do not commit `.env`.
 
-5. Load Sample Data (Optional): If you have a fixture file for sample data, load it:
-   python manage.py loaddata sample_data.json
+4. Start the services:
 
-6.**Run the Development Server**:
-python manage.py runserver
+   ```bash
+   docker compose up --build
+   ```
 
-7. **Access the Application**:
-   Open your browser and go to http://127.0.0.1:8000.
+5. In another terminal, apply database migrations:
 
-Project Structure
-Ecommerce/
-├── products/
-│ ├── migrations/
-│ ├── templates/
-│ │ ├── home/
-│ │ │ ├── product_list.html
-│ │ │ ├── product\*detail.html
-│ ├── static/
-│ │ ├── products/
-│ │ │ ├── product_style.css
-│ ├── views.py
-│ ├── models.py
-│ ├── urls.py
-├── Ecommerce/
-│ ├── settings.py
-│ ├── urls.py
-│ ├── wsgi.py
-├── manage.py
-├── requirements.txt
+   ```bash
+   docker compose exec web python manage.py migrate
+   ```
+
+6. Visit [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+## Environment variables
+
+See `.env.example` for the required variables. Docker Compose uses the `db` service as the database host. The default Compose configuration is intended for local development, not production deployment.
+
+## Security notes
+
+- Use a unique secret key and database password in your local `.env`.
+- Keep `DJANGO_DEBUG=true` only for local development. Set it to `false` in deployed environments and configure `DJANGO_ALLOWED_HOSTS`.
+- The app has not been represented here as production-hardened; review Django's deployment checklist, authentication/cart flows, and automated tests before deployment.
